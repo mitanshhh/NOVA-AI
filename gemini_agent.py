@@ -49,7 +49,7 @@ def needs_internet_search(answer: str) -> bool:
 def switch_to_internet_search(retriever_query):
     client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
-    model = "gemini-2.5-flash-lite" 
+    model = "gemini-3-flash-preview" 
     
     contents = [
         types.Content(
@@ -69,7 +69,7 @@ def switch_to_internet_search(retriever_query):
     )
     internet_search_result = []
     try:
-        for chunk in client.models.generate_content(
+        for chunk in client.models.generate_content_stream(
             model=model,
             contents=contents,
             config=generate_content_config,
