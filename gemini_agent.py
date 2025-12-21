@@ -1,7 +1,8 @@
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_classic.chains import RetrievalQA
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 import os
 from google.genai import types
@@ -10,14 +11,21 @@ from dotenv import load_dotenv
 import streamlit as st
 
 load_dotenv()
-llm = ChatGoogleGenerativeAI(
-    # model="gemini-2.5-flash-lite",
-    model="gemini-flash-latest",
+# llm = ChatGoogleGenerativeAI(
+#     # model="gemini-2.5-flash-lite",
+#     model="gemini-flash-latest",
+#     temperature=0.7,
+#     max_tokens=3000,
+#     timeout=None,
+#     max_retries=2,
+#     api_key=os.getenv('GEMINI_API_KEY'),
+# )
+llm = ChatGroq(
+    model="llama-3.1-8b-instant",
     temperature=0.7,
-    max_tokens=3000,
+    max_tokens=None,
     timeout=None,
     max_retries=2,
-    api_key=os.getenv('GEMINI_API_KEY'),
 )
 
 embeddings = HuggingFaceEmbeddings(
@@ -61,7 +69,7 @@ def switch_to_internet_search(retriever_query):
     )
     internet_search_result = []
     try:
-        for chunk in client.models.generate_content_stream(
+        for chunk in client.models.generate_content(
             model=model,
             contents=contents,
             config=generate_content_config,
@@ -118,6 +126,7 @@ def ask_ai(retriever_query, full_history,data_base_live_connected):
     )
     try:
         result = qa.invoke(retriever_query)
+        print(result)
         result = result["result"]
 
         if needs_internet_search(result):
