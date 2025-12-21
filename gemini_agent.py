@@ -47,42 +47,48 @@ def needs_internet_search(answer: str) -> bool:
 
 
 def switch_to_internet_search(retriever_query):
+    # Ensure your API key is set correctly
     client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
-    model = "gemini-3-flash-preview" 
+    # Use a valid model name
+    model = "gemini-2.0-flash-lite" 
     
     contents = [
         types.Content(
             role="user",
-            parts=[
-                types.Part.from_text(text=retriever_query),
-            ],
+            parts=[types.Part.from_text(text=retriever_query)],
         ),
     ]
 
+    # Correct tool definition for the new SDK
     tools = [
-        types.Tool(googleSearch=types.GoogleSearch()),
+        types.Tool(google_search=types.GoogleSearchRetrieval()),
     ]
 
     generate_content_config = types.GenerateContentConfig(
         tools=tools,
     )
+
     internet_search_result = []
     try:
-        for chunk in client.models.generate_content_stream(
+        # Using generate_content instead of stream for simpler debugging first
+        response = client.models.generate_content(
             model=model,
             contents=contents,
             config=generate_content_config,
-        ):
-            if chunk.text:
-                internet_search_result.append(chunk.text)
+        )
+        
+        # Return the text response
+        return response.text
 
-        return "".join(internet_search_result)
     except Exception as e:
-        st.warning("You exceeded your current quota, Please try later or get a new API key")
-        print(e)
+        # Check if the error is actually a quota issue (HTTP 429)
+        if "429" in str(e):
+            st.warning("Quota exceeded. Please wait a moment or check your billing.")
+        else:
+            st.error(f"An unexpected error occurred: {e}")
+        print(f"Detailed Error: {e}")
         return ""
-
 
 def ask_ai(retriever_query, full_history,data_base_live_connected):
 
