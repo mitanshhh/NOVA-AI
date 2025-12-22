@@ -1,17 +1,16 @@
 import streamlit as st
 import os
-from dotenv import load_dotenv, set_key
 from pathlib import Path
 
-# Load environment variables
-load_dotenv()
 
-st.set_page_config(page_title="Settings", page_icon="⚙️")
+st.set_page_config(page_title="Settings", page_icon="⚙️",layout="wide")
 
 st.title("⚙️ Settings & Configuration")
 
-#Path to your .env file
-env_file_path = Path(".env")
+# This ensures the key is private to the current user's browser session
+if "USER_GEMINI_API_KEY" not in st.session_state:
+    # Fallback order: 1. App Secrets (Developer's key) | 2. Empty string
+    st.session_state["USER_GEMINI_API_KEY"] = os.getenv("GEMINI_API_KEY", "")
 
 # ================= API KEY SECTION =================
 st.header("🔑 Gemini API Setup")
@@ -30,44 +29,38 @@ with st.expander("📝 **How to get your API Key (Step-by-Step)**", expanded=Tru
     """)
 
 # Input Form
-current_key = os.getenv("GEMINI_API_KEY", "")
-masked_key = f"{current_key[:4]}...{current_key[-4:]}" if current_key and len(current_key) > 8 else ""
+# We use session_state to track what the user has saved
+current_key = st.session_state["USER_GEMINI_API_KEY"]
+masked_key = f"{current_key[:4]}...{current_key[-4:]}" if len(current_key) > 8 else "Not Set"
 
 col1, col2 = st.columns([3, 1])
 with col1:
     api_key_input = st.text_input(
         "Enter API Key",
-        value=current_key if current_key else "",
+        value=current_key,
         type="password",
         placeholder="AIzaSy...",
-        help="This key will be stored securely in your local .env file"
+        help="This key is stored only in your current browser session for privacy."
     )
 
 if st.button("💾 Save API Key", type="primary"):
-    if len(api_key_input) < 30:
+    if len(api_key_input) < 30 and len(api_key_input) > 0:
         st.error("Invalid API Key format. It should be longer.")
     else:
-        try:
-            # Ensure .env exists
-            if not env_file_path.exists():
-                env_file_path.touch()
-            
-            # Write to .env
-            set_key(env_file_path, "GEMINI_API_KEY", api_key_input.strip())
-            
-            # Update current session
-            os.environ["GEMINI_API_KEY"] = api_key_input.strip()
-            
-            st.success("✅ API Key saved successfully! You can now use the app.")
-            st.rerun()
-        except Exception as e:
-            st.error(f"Error saving key: {e}")
+        # SAVE TO SESSION STATE ONLY (Private to this user)
+        st.session_state["USER_GEMINI_API_KEY"] = api_key_input.strip()
+        
+        # Also update os.environ for the duration of this specific user's run
+        os.environ["GEMINI_API_KEY"] = api_key_input.strip()
+        
+        st.success("✅ API Key applied to this session!")
+        st.rerun()
 
 # Show current status
-if os.getenv("GEMINI_API_KEY"):
-    st.caption(f"✅ Active Key: `{masked_key}`")
+if st.session_state["USER_GEMINI_API_KEY"]:
+    st.caption(f"✅ Active Key for this session: `{masked_key}`")
 else:
-    st.caption("❌ No API Key found.")
+    st.caption("❌ No API Key found for this session.")
 
 st.markdown("---")
 
