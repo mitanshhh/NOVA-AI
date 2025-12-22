@@ -51,7 +51,7 @@ def switch_to_internet_search(retriever_query):
     client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
     # Use a valid model name
-    model = "gemini-2.0-flash-lite" 
+    model = "gemini-2.5-flash" 
     
     contents = [
         types.Content(
