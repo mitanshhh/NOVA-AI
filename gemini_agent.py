@@ -47,10 +47,10 @@ def needs_internet_search(answer: str) -> bool:
 
 
 def switch_to_internet_search(retriever_query):
-    # Ensure your API key is set correctly
+
     client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
-    # Use a valid model name
+
     model = "gemini-2.5-flash" 
     
     contents = [
@@ -60,7 +60,7 @@ def switch_to_internet_search(retriever_query):
         ),
     ]
 
-    # Correct tool definition for the new SDK
+
     tools = [
         types.Tool(google_search=types.GoogleSearchRetrieval()),
     ]
@@ -71,18 +71,16 @@ def switch_to_internet_search(retriever_query):
 
     internet_search_result = []
     try:
-        # Using generate_content instead of stream for simpler debugging first
+       
         response = client.models.generate_content(
             model=model,
             contents=contents,
             config=generate_content_config,
         )
-        
-        # Return the text response
         return response.text
 
     except Exception as e:
-        # Check if the error is actually a quota issue (HTTP 429)
+       
         if "429" in str(e):
             st.warning("Quota exceeded. Please wait a moment or check your billing.")
         else:

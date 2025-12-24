@@ -7,9 +7,9 @@ st.set_page_config(page_title="Settings", page_icon="⚙️",layout="wide")
 
 st.title("⚙️ Settings & Configuration")
 
-# This ensures the key is private to the current user's browser session
+
 if "USER_GEMINI_API_KEY" not in st.session_state:
-    # Fallback order: 1. App Secrets (Developer's key) | 2. Empty string
+
     st.session_state["USER_GEMINI_API_KEY"] = os.getenv("GEMINI_API_KEY", "")
 
 # ================= API KEY SECTION =================
@@ -28,8 +28,7 @@ with st.expander("📝 **How to get your API Key (Step-by-Step)**", expanded=Tru
     6. Paste it in the box below and click **Save**.
     """)
 
-# Input Form
-# We use session_state to track what the user has saved
+
 current_key = st.session_state["USER_GEMINI_API_KEY"]
 masked_key = f"{current_key[:4]}...{current_key[-4:]}" if len(current_key) > 8 else "Not Set"
 
@@ -47,10 +46,10 @@ if st.button("💾 Save API Key", type="primary"):
     if len(api_key_input) < 30 and len(api_key_input) > 0:
         st.error("Invalid API Key format. It should be longer.")
     else:
-        # SAVE TO SESSION STATE ONLY (Private to this user)
+
         st.session_state["USER_GEMINI_API_KEY"] = api_key_input.strip()
         
-        # Also update os.environ for the duration of this specific user's run
+
         os.environ["GEMINI_API_KEY"] = api_key_input.strip()
         
         st.success("✅ API Key applied to this session!")

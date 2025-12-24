@@ -79,7 +79,7 @@ def save_vector_db_to_supabase(vectordb: FAISS) -> str:
 
 def load_vector_db_from_supabase(db_id: str, embeddings) -> FAISS:
 
-    # 1. Compute storage path from id (same pattern used when saving)
+    # 1. Compute storage path from id 
     storage_path = f"stores/{db_id}.zip"
 
     # 2. Download zip from Supabase Storage

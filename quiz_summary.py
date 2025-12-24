@@ -16,6 +16,14 @@ st.markdown("""
 <style>
 .st-emotion-cache-467cry p,
 .st-emotion-cache-467cry li { color: rgb(255 255 255); }
+.st-emotion-cache-13veyas {
+    opacity: 1 !important; 
+    visibility: visible !important;
+}
+.st-emotion-cache-13veyas:hover {
+    opacity: 1 !important; 
+    visibility: visible !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -274,11 +282,8 @@ if st.session_state.quiz:
     with m1:
         st.metric("Current Batch Score", f"{current_score} / {len(questions)}")
     with m2:
-        # Shows cumulative score (History + Current Batch)
         total_s = st.session_state.historical_score + current_score
         total_q = st.session_state.historical_total + total_checked
-        # If user hasn't checked an answer in current batch, we usually don't count it in 'total attempted' yet
-        # But if you want total questions SEEN, use st.session_state.historical_total + len(questions)
         st.metric("Total Session Score", f"{total_s} / {total_q}")
 
     # NEXT BUTTON
