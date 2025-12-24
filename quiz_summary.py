@@ -155,7 +155,7 @@ if "historical_total" not in st.session_state:
 # ================= LOGIC HANDLERS =================
 def reset_quiz_state():
     """Resets everything for a brand new quiz session (new file or hard reset)"""
-    st.session_state.summary = None
+    # st.session_state.summary = None
     st.session_state.quiz = None
     st.session_state.asked_questions = []
     st.session_state.checked_status = {}
