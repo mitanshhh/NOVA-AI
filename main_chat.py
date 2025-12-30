@@ -105,7 +105,7 @@ if "topic_name" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "assistant", "content": "Ask me anything"}
+        {"role": "assistant", "content": "Make sure you have enabled API key in settings"}
     ]
 
 
