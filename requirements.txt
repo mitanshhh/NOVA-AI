@@ -216,3 +216,5 @@ xxhash==3.6.0
 yarl==1.22.0
 zstandard==0.25.0
 langchain-groq==1.1.1
+pdfminer.six==20221105
+unstructured==0.10.30
