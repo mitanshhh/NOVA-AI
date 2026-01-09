@@ -1,6 +1,5 @@
 from langchain_community.document_loaders import TextLoader,PyPDFLoader,Docx2txtLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import UnstructuredPDFLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import tempfile
@@ -22,7 +21,7 @@ def convert_to_vector_db(filename,mode_of_file):
         tmp.close()
         tmp_path = tmp.name
         if mode_of_file == "pdf":
-            loader = UnstructuredPDFLoader(tmp_path)
+            loader = PyPDFLoader(tmp_path)
         elif mode_of_file == "text":
             loader = TextLoader(tmp_path,encoding="utf-8")
         elif mode_of_file == "docx":
