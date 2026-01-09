@@ -201,7 +201,7 @@ typing-inspect==0.9.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.2
-unstructured==0.18.20
+# unstructured==0.18.20
 unstructured-client==0.42.4
 unstructured_inference==1.1.1
 uritemplate==4.2.0
