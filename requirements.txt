@@ -123,7 +123,7 @@ packaging==25.0
 pandas==2.3.3
 pdf2image==1.17.0
 pdfminer==20191125
-pdfminer.six==20251107
+# pdfminer.six==20251107
 pi_heif==1.1.1
 pillow==12.0.0
 pillow_heif==1.1.1
