@@ -76,6 +76,7 @@ def switch_to_internet_search(retriever_query):
                 config=generate_content_config,
             )
             response_after_internet_search = response.text
+            print(response_after_internet_search)
 
         except Exception as e:
         
@@ -86,7 +87,7 @@ def switch_to_internet_search(retriever_query):
             else:
                 response_after_internet_search = (f"An unexpected error occurred: {e}")
             print(f"Detailed Error: {e}")
-            return response_after_internet_search
+            return ""
     else:
         return "Head over to Settings and configure your Gemini API key"
 
