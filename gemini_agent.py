@@ -49,8 +49,7 @@ def needs_internet_search(answer: str) -> bool:
 def switch_to_internet_search(retriever_query):
     if os.getenv('GEMINI_API_KEY'):
         client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
-
-
+        
         model = "gemini-2.5-flash" 
         
         contents = [
@@ -76,16 +75,18 @@ def switch_to_internet_search(retriever_query):
                 contents=contents,
                 config=generate_content_config,
             )
-            return response.text
+            response_after_internet_search = response.text
 
         except Exception as e:
         
             if "429" in str(e):
-                st.warning("Quota exceeded. Please wait a moment or check your billing.")
+                response_after_internet_search = "Quota exceeded. Please wait a moment or check your billing."
+            elif "400" in str(e):
+                response_after_internet_search = "Invalid API key, Check your API key in Settings"
             else:
-                st.error(f"An unexpected error occurred: {e}")
+                response_after_internet_search = (f"An unexpected error occurred: {e}")
             print(f"Detailed Error: {e}")
-            return ""
+            return response_after_internet_search
     else:
         return "Head over to Settings and configure your Gemini API key"
 
