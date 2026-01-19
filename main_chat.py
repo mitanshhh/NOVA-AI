@@ -105,7 +105,7 @@ if "topic_name" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "assistant", "content": "Make sure you have enabled API key in settings"}
+        {"role": "assistant", "content": "Ask me anything"}
     ]
 
 
@@ -210,8 +210,7 @@ if retriever_query := st.chat_input("Ask a question"):
         st.session_state.messages.append({"role": "user", "content": retriever_query})
 
         with st.chat_message("user"):
-            st.markdown(retriever_query)
-            
+            st.markdown(retriever_query)   
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
 

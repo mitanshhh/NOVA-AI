@@ -47,46 +47,48 @@ def needs_internet_search(answer: str) -> bool:
 
 
 def switch_to_internet_search(retriever_query):
-
-    client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
-
-
-    model = "gemini-2.5-flash" 
-    
-    contents = [
-        types.Content(
-            role="user",
-            parts=[types.Part.from_text(text=retriever_query)],
-        ),
-    ]
+    if os.getenv('GEMINI_API_KEY'):
+        client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 
-    tools = [
-        types.Tool(google_search=types.GoogleSearchRetrieval()),
-    ]
+        model = "gemini-2.5-flash" 
+        
+        contents = [
+            types.Content(
+                role="user",
+                parts=[types.Part.from_text(text=retriever_query)],
+            ),
+        ]
 
-    generate_content_config = types.GenerateContentConfig(
-        tools=tools,
-    )
 
-    internet_search_result = []
-    try:
-       
-        response = client.models.generate_content(
-            model=model,
-            contents=contents,
-            config=generate_content_config,
+        tools = [
+            types.Tool(google_search=types.GoogleSearchRetrieval()),
+        ]
+
+        generate_content_config = types.GenerateContentConfig(
+            tools=tools,
         )
-        return response.text
 
-    except Exception as e:
-       
-        if "429" in str(e):
-            st.warning("Quota exceeded. Please wait a moment or check your billing.")
-        else:
-            st.error(f"An unexpected error occurred: {e}")
-        print(f"Detailed Error: {e}")
-        return ""
+        try:
+        
+            response = client.models.generate_content(
+                model=model,
+                contents=contents,
+                config=generate_content_config,
+            )
+            return response.text
+
+        except Exception as e:
+        
+            if "429" in str(e):
+                st.warning("Quota exceeded. Please wait a moment or check your billing.")
+            else:
+                st.error(f"An unexpected error occurred: {e}")
+            print(f"Detailed Error: {e}")
+            return ""
+    else:
+        return "Head over to Settings and configure your Gemini API key"
+
 
 def ask_ai(retriever_query, full_history,data_base_live_connected):
 

@@ -49,7 +49,7 @@ def convert_to_vector_db(filename,mode_of_file):
         vector_embeddings.save_local(f"{filename.name}_DB")
         return vector_embeddings
     finally:
-            # 5) Clean up temp file (safe after loader.load())
+            
             try:
                 if os.path.exists(tmp.name):
                     os.remove(tmp.name)
